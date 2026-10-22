@@ -233,3 +233,5 @@ Tested in the build environment:
 - Rendering in a real browser (responsive layout, hamburger menu, scroll highlighting, form interaction) and any deployment
 
 Please run these locally after `npm install` and tell Claude Code about any failures.
+#   P o r t f o l i o - 3 r d - y e a r  
+ 
