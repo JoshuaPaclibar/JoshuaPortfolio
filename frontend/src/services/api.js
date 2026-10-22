@@ -1,7 +1,8 @@
 // The ONLY place the frontend talks to the backend.
-// If VITE_API_URL is set, requests go there directly. Otherwise they go to "/api",
-// which the Vite dev server proxies to the backend (see vite.config.js).
-const API_URL = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '');
+// - `npm run dev`: always uses "/api", which the Vite dev server proxies to the backend
+//   (see vite.config.js). A leftover VITE_API_URL in frontend/.env is ignored on purpose.
+// - Production build: uses VITE_API_URL (for example https://my-backend.example.com/api).
+const API_URL = (import.meta.env.DEV ? '/api' : import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '');
 
 export class ApiError extends Error {
   constructor(message, { status = 0, fieldErrors = {} } = {}) {
@@ -26,7 +27,7 @@ async function request(path, options = {}) {
   // A wrong URL often returns an HTML page; give a clear message instead of "Unexpected token <".
   const isJson = (response.headers.get('content-type') || '').includes('application/json');
   if (!isJson) {
-    throw new ApiError(`The server returned an unexpected response (status ${response.status}). Check the API URL.`, {
+    throw new ApiError(`The server returned an unexpected response (status ${response.status}) from ${API_URL}${path}. Another program may be using the backend's port, or the backend is not the portfolio API.`, {
       status: response.status,
     });
   }

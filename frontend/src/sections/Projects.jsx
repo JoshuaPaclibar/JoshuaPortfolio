@@ -7,7 +7,6 @@ import { fallbackProjects } from '../data/projects.js';
 export default function Projects() {
   const [projects, setProjects] = useState([]);
   const [status, setStatus] = useState('loading'); // 'loading' | 'ready'
-  const [notice, setNotice] = useState('');
 
   useEffect(() => {
     let cancelled = false;
@@ -40,10 +39,6 @@ export default function Projects() {
 
         {status === 'loading' && (
           <p className="state" role="status">Loading projects…</p>
-        )}
-
-        {status === 'ready' && notice && (
-          <p className="state state--warning" role="status">{notice}</p>
         )}
 
         {status === 'ready' && projects.length === 0 && (

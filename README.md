@@ -75,7 +75,6 @@ cd ..
 # Frontend
 cd frontend
 npm install
-Copy-Item .env.example .env
 cd ..
 ```
 
@@ -87,7 +86,7 @@ cd ..
 
 | Variable | Purpose | Default in `.env.example` |
 | -------- | ------- | ------------------------- |
-| `PORT` | API port | `5000` |
+| `PORT` | API port | `5050` |
 | `MONGODB_URI` | MongoDB connection string | `mongodb://127.0.0.1:27017/portfolio_db` |
 | `FRONTEND_URL` | Exact frontend origin allowed by CORS (no trailing slash) | `http://localhost:5173` |
 | `NODE_ENV` | `development` or `production` | `development` |
@@ -95,13 +94,7 @@ cd ..
 | `SMTP_PASS` | Gmail **App Password** (16 characters, not your normal password) | *(empty, you fill it in)* |
 | `CONTACT_TO` | Inbox that receives the messages (defaults to `SMTP_USER`) | `joshuapaclibar37@gmail.com` |
 
-`frontend/.env`
-
-| Variable | Purpose |
-| -------- | ------- |
-| `VITE_API_URL` | Base URL of the API, e.g. `http://localhost:5000/api` |
-
-**Proxy vs `VITE_API_URL`:** if `VITE_API_URL` is set, the browser calls that URL directly (so CORS and `FRONTEND_URL` must match). If it is empty or missing, the app calls `/api/...` on the Vite dev server (port 5173) and `vite.config.js` proxies it to `http://localhost:5000`. Restart `npm run dev` after changing `.env`.
+`frontend/.env` is **not needed in development**. `npm run dev` sends every request to `/api` on the Vite server (port 5173), and Vite forwards it to the backend port written in `backend/.env` (`PORT`). Change the port in one place only. For a production build, set `VITE_API_URL=https://<your-backend-host>/api` before `npm run build`.
 
 Never commit real `.env` files. Only `VITE_` variables reach the browser, so never put secrets in the frontend `.env`.
 
@@ -115,6 +108,8 @@ The contact form emails every message to `CONTACT_TO`. Gmail needs an *App Passw
 4. Restart the backend (`npm run dev`) and send a test message from the site. Reply-To is set to the visitor's email.
 
 Never commit `.env` or share the app password. If email is not configured, messages are only saved to MongoDB (when it is running); if neither works, the visitor sees an error, not a fake success.
+
+> **Security:** put real secrets (MongoDB password, Gmail App Password) only in `backend/.env`, never in `.env.example` or in code, because `.env.example` is committed to Git. If a password was ever committed or shared, change it (MongoDB Atlas → Database Access → Edit user → new password; Google → revoke the App Password and create a new one).
 
 ## MongoDB setup
 
@@ -139,7 +134,7 @@ Terminal 1, backend:
 ```powershell
 cd my-portfolio\backend
 npm run seed     # once: adds the two starting projects to MongoDB
-npm run dev      # API on http://localhost:5000
+npm run dev      # API on http://localhost:5050
 ```
 
 Terminal 2, frontend:
@@ -149,7 +144,7 @@ cd my-portfolio\frontend
 npm run dev      # site on http://localhost:5173
 ```
 
-Check the API: open <http://localhost:5000/api/health>. `"database": "connected"` means MongoDB works.
+Check the API: open <http://localhost:5050/api/health>. `"database": "connected"` means MongoDB works.
 
 ### Scripts
 
@@ -191,6 +186,7 @@ Details and examples: [docs/API.md](docs/API.md).
 | Projects show a yellow "sample projects" notice | The API is unreachable or MongoDB is down. Open `/api/health`, read the notice text and the backend terminal. |
 | `[db] MongoDB connection failed` | Is MongoDB running? Is `MONGODB_URI` correct? For Atlas: IP allow-list, user/password, URL-encoded password. |
 | CORS error in browser console | `FRONTEND_URL` must exactly equal the browser origin (`http://localhost:5173`). Restart the backend. Or empty `VITE_API_URL` to use the proxy. |
+| Form says the message service is not reachable (browser console shows status 404 / "unexpected response") | Another program is using the backend's port (for example another Express app on 5000) or the backend is not running. Open `http://localhost:5050/api/health` (use your PORT): it must show `"status":"ok"`. Otherwise set `PORT=5050` in `backend/.env`, stop the other program, restart the backend, and delete any old `frontend/.env`. |
 | "unexpected response" / `Unexpected token <` | The frontend got an HTML page: wrong `VITE_API_URL`, backend not running, or wrong port. |
 | Contact form says "could not be delivered" | Neither email nor MongoDB worked. Check `SMTP_USER` / `SMTP_PASS` (App Password!) in `backend/.env` and the backend terminal for `[contact] Email failed: ...`. |
 | `429 Too many messages` | Rate limit (10 per 15 minutes per IP). Wait or restart the backend while testing. |
@@ -233,5 +229,3 @@ Tested in the build environment:
 - Rendering in a real browser (responsive layout, hamburger menu, scroll highlighting, form interaction) and any deployment
 
 Please run these locally after `npm install` and tell Claude Code about any failures.
-#   P o r t f o l i o - 3 r d - y e a r  
- 

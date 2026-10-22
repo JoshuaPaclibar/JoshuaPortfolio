@@ -71,6 +71,7 @@ export const profile = {
 
   contact: {
     email: 'joshuapaclibar37@gmail.com',
+    emailUrl: 'https://mail.google.com/mail/u/0/#inbox?compose=DmwnWrRspxWvsKGtgsrMjLXXDtCLNdPxGLgWLWdpkwFSBHjZVLctNTcFmDcWplFlwsgvQHVZNxcB',
     facebookName: 'Joshua Paclibar',
     facebookUrl: 'https://www.facebook.com/joshua.paclibar.871770',
     phone: '0939 981 8121',

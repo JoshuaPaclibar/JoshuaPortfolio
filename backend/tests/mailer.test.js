@@ -41,3 +41,29 @@ test('sendContactEmail throws when not configured or when sending fails', async 
     /boom/,
   );
 });
+
+import { verifyMail, explainMailError } from '../src/utils/mailer.js';
+
+test('app password pasted with spaces is cleaned before login', async () => {
+  let created;
+  await sendContactEmail(values, {
+    env: { ...env, SMTP_PASS: 'abcd efgh ijkl mnop' },
+    createTransport: (opts) => ((created = opts), { sendMail: async () => {} }),
+  });
+  assert.equal(created.auth.pass, 'abcdefghijklmnop');
+});
+
+test('verifyMail reports ok, not-configured and Gmail login failures clearly', async () => {
+  assert.deepEqual(await verifyMail({ env, createTransport: () => ({ verify: async () => true }) }), { ok: true });
+  assert.equal((await verifyMail({ env: {} })).ok, false);
+  const bad = await verifyMail({
+    env,
+    createTransport: () => ({ verify: async () => { throw Object.assign(new Error('Invalid login'), { code: 'EAUTH' }); } }),
+  });
+  assert.equal(bad.ok, false);
+  assert.match(bad.reason, /App Password/);
+});
+
+test('explainMailError gives network hints', () => {
+  assert.match(explainMailError(Object.assign(new Error('x'), { code: 'ENOTFOUND' })), /internet/);
+});

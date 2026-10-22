@@ -1,6 +1,6 @@
 # API Reference
 
-Base URL (development): `http://localhost:5000/api`
+Base URL (development): `http://localhost:5050/api`
 
 All responses are JSON.
 
@@ -17,7 +17,7 @@ All responses are JSON.
 | 413 | Request body larger than 10 KB |
 | 429 | Rate limit exceeded (contact endpoint) |
 | 500 | Unexpected server error |
-| 503 | MongoDB is not connected (projects) / message could not be delivered (contact) |
+| 503 | MongoDB is not connected (projects) / message could not be emailed (contact) |
 
 ---
 
@@ -66,7 +66,7 @@ Errors: `400` if `:id` is not a 24-character hex ObjectId, `404` if no project h
 
 ## POST /api/contact
 
-Validates a message, **emails it to the portfolio owner** (Gmail, via nodemailer), and also saves a copy to MongoDB (collection `contacts`) when the database is connected.
+Validates a message, **emails it to the portfolio owner** (Gmail, via nodemailer), and also saves a backup copy to MongoDB (collection `contacts`) when the database is connected. The request succeeds only if the email was sent.
 
 Request body (`Content-Type: application/json`):
 
@@ -94,14 +94,14 @@ Validation error `400`:
 }
 ```
 
-Other errors: `429` after 10 requests per IP in 15 minutes, `503` if the message could not be delivered by **either** route (email not configured/failed **and** database not connected). It is never reported as sent unless the email was sent or the message was saved.
+Other errors: `429` after 10 requests per IP in 15 minutes, `503` if the email could not be sent (Gmail not configured or login rejected). A message is never reported as sent unless the email really went out.
 
 Invalid input is checked first, so it returns `400` even when nothing else is configured.
 
 ### Example (PowerShell)
 
 ```powershell
-Invoke-RestMethod -Method Post -Uri http://localhost:5000/api/contact `
+Invoke-RestMethod -Method Post -Uri http://localhost:5050/api/contact `
   -ContentType 'application/json' `
   -Body '{"name":"Test User","email":"test@example.com","message":"Hello from PowerShell!"}'
 ```

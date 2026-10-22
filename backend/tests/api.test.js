@@ -79,3 +79,10 @@ test('POST /api/contact is NOT reported as sent when neither email nor database 
   const res = await post('/api/contact', good);
   assert.equal(res.status, 503);
 });
+
+test('CORS: any localhost port is allowed in development, other sites never', async () => {
+  const local = await fetch(`${base}/api/health`, { headers: { Origin: 'http://127.0.0.1:5174' } });
+  assert.equal(local.status, 200);
+  const other = await fetch(`${base}/api/health`, { headers: { Origin: 'https://evil.example' } });
+  assert.equal(other.status, 403);
+});

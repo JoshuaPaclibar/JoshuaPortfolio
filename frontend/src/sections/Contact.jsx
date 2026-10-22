@@ -31,7 +31,7 @@ function validate({ name, email, message }) {
 const EMPTY = { name: '', email: '', message: '' };
 
 export default function Contact() {
-  const { email, phone, phoneNote, facebookName, facebookUrl } = profile.contact;
+  const { email, emailUrl, phone, phoneNote, facebookName, facebookUrl } = profile.contact;
   const [form, setForm] = useState(EMPTY);
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle'); // 'idle' | 'loading' | 'success' | 'error'
@@ -61,8 +61,15 @@ export default function Contact() {
       setFeedback(message || 'Thank you! Your message has been sent.');
       setForm(EMPTY);
     } catch (err) {
+      // Technical details go to the browser console; visitors get a friendly message.
+      console.error('[contact] Sending failed:', err.message);
+      const friendly = [400, 413, 429, 503].includes(err.status);
       setStatus('error');
-      setFeedback(err.message);
+      setFeedback(
+        friendly
+          ? err.message
+          : 'Sorry, the message service is not reachable right now. Please try again later or email me directly.',
+      );
       if (err.fieldErrors && Object.keys(err.fieldErrors).length > 0) setErrors(err.fieldErrors);
     }
   };
@@ -91,7 +98,7 @@ export default function Contact() {
           <ul className="contact__list">
             <li>
               <span className="contact__label">E-mail:</span>
-              <a className="contact__value" href={`mailto:${email}`}>
+              <a className="contact__value" href={emailUrl} target="_blank" rel="noopener noreferrer">
                 <Mail size={22} aria-hidden="true" /> <span>{email}</span>
               </a>
             </li>
@@ -157,7 +164,12 @@ export default function Contact() {
               )}
               {status === 'error' && (
                 <p className="form-feedback__error">
-                  <AlertCircle size={18} aria-hidden="true" /> {feedback}
+                  <AlertCircle size={18} aria-hidden="true" /> <span>{feedback}</span>
+                </p>
+              )}
+              {status === 'error' && (
+                <p className="form-feedback__alt">
+                  Or write to me directly: <a href={emailUrl} target="_blank" rel="noopener noreferrer">{email}</a>
                 </p>
               )}
             </div>

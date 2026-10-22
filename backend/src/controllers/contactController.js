@@ -1,11 +1,13 @@
 import Contact from '../models/Contact.js';
 import { isDbConnected } from '../config/db.js';
 import { validateContact } from '../utils/validate.js';
-import { isMailConfigured, sendContactEmail } from '../utils/mailer.js';
+import { isMailConfigured, sendContactEmail, explainMailError } from '../utils/mailer.js';
+
 
 // POST /api/contact
-// 1. Validate. 2. Email it to the portfolio owner. 3. Also save a copy in MongoDB when connected.
-// The visitor only sees "sent" when at least one of those really worked.
+// 1. Validate.  2. Email it to the portfolio owner (this is what makes it "sent").
+// 3. Save a copy in MongoDB when connected (best effort, only a backup).
+// The visitor only sees "sent" when the email was really delivered to Gmail.
 export async function createContact(req, res, next) {
   try {
     const { values, errors } = validateContact(req.body);
@@ -14,33 +16,30 @@ export async function createContact(req, res, next) {
     }
 
     let emailed = false;
-    let saved = false;
-
     if (isMailConfigured()) {
       try {
         await sendContactEmail(values);
         emailed = true;
       } catch (err) {
-        console.error(`[contact] Email failed: ${err.message}`);
+        console.error(`[contact] Email failed: ${explainMailError(err)}`);
       }
     } else {
-      console.warn('[contact] Email is not configured. Set SMTP_USER and SMTP_PASS in backend/.env.');
+      console.warn('[contact] Email is not configured. Set SMTP_USER and SMTP_PASS in backend/.env and restart the backend.');
     }
 
     if (isDbConnected()) {
       try {
         // Only the three validated fields are saved; anything else in the body is ignored.
         await Contact.create(values);
-        saved = true;
       } catch (err) {
-        console.error(`[contact] Saving to MongoDB failed: ${err.message}`);
+        console.error(`[contact] Saving the backup copy to MongoDB failed: ${err.message}`);
       }
     }
 
-    if (!emailed && !saved) {
+    if (!emailed) {
       return res.status(503).json({
         success: false,
-        message: 'Your message could not be delivered right now. Please try again later or contact me directly.',
+        message: 'Your message could not be emailed right now. Please try again later.',
       });
     }
 
