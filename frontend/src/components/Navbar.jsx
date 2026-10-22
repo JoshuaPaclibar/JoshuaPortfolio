@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 
 export const NAV_LINKS = [
+  { id: 'home', label: 'Home' },
   { id: 'about', label: 'About' },
-  { id: 'skills', label: 'Skills' },
-  { id: 'education', label: 'Education' },
   { id: 'projects', label: 'Projects' },
   { id: 'contact', label: 'Contact' },
 ];
@@ -40,7 +39,7 @@ export default function Navbar() {
     <header className="navbar">
       <div className="navbar__inner">
         <a className="navbar__brand" href="#home" onClick={() => setOpen(false)} aria-label="Go to top">
-          JP
+          MyPortfolio
         </a>
 
         <button

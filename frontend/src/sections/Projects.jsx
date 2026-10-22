@@ -24,7 +24,6 @@ export default function Projects() {
         console.error('[projects] API request failed:', err.message);
         if (!cancelled) {
           setProjects(fallbackProjects);
-          setNotice(`Showing sample projects stored in the frontend because the API is unavailable (${err.message})`);
           setStatus('ready');
         }
       });
@@ -37,7 +36,7 @@ export default function Projects() {
   return (
     <section id="projects" className="section" aria-labelledby="projects-title">
       <div className="container">
-        <SectionTitle id="projects-title" title="Projects" />
+        <SectionTitle id="projects-title" title="My Projects" />
 
         {status === 'loading' && (
           <p className="state" role="status">Loading projects…</p>

@@ -7,12 +7,15 @@
 export const isPlaceholder = (value) => typeof value === 'string' && value.startsWith('[ADD');
 
 export const profile = {
-  name: 'Joshua Y. Paclibar',
+  name: 'Joshua Paclibar',
   role: '3rd-Year Information Technology Student',
   school: 'Western Institute of Technology',
   photo: '/images/profile.png', // replace public/images/profile.png with a higher-resolution photo
   intro:
-    'IT student at Western Institute of Technology, currently pursuing a degree in Information Technology to learn System Development.',
+    'Welcome to my portfolio, my name is Joshua Paclibar. A 3rd year in Bachelor of Science in Information Technology willing to learn web development and programming.',
+
+  // Skills shown on the Home page (chips)
+  homeSkills: ['HTML', 'CSS', 'Figma', 'Java'],
 
   // Social links: paste full URLs. Empty ('') hides the icon.
   social: {
@@ -21,16 +24,18 @@ export const profile = {
   },
 
   about: {
+    // Three boxes on the About page: Background, Experiences, Education (one bullet per entry)
     background: [
+      'I was born in St. Pauls Hospital in May 27, 2003.',
       'My hobbies are playing games, watching Anime, and reading Manga (Japanese Comics).',
-      'My dream is to have an uneventful, stable life.',
+      'My dream is to have a uneventful stable life.',
       'Currently pursuing a degree of Information Technology to learn System Development.',
     ],
-    experience:
-      'So far my experience in IT has not been smooth, especially in my previous semester in my 1st year in BSIT. Still, the courses in this program are great because they are mostly easy to understand, and I experienced much better teamwork on projects than at the previous level. Overall, it has been a good experience for developing programming skills and interacting with other people as an IT student.',
-    goals: [
-      'My current interest are game development and beta tester',
-      'My current career goals as a IT student is to learn as much as I can during college. and my next goal is learn game development.',
+    experience: [
+      'So far my experience in IT is not smooth, especially in previous semester in my 1st year in BSIT. Our courses in this program is great because it\u2019s mostly easy to understand and I experienced great teamwork for projects much better than previous level. Overall, it\u2019s a good experience for developing programming skills and interacting with other people as a IT student.',
+    ],
+    education: [
+      'I graduated in RG Hechanova Memorial National High School in my Senior Highschool as HUMSS.',
     ],
   },
 
@@ -67,8 +72,8 @@ export const profile = {
   contact: {
     email: 'joshuapaclibar37@gmail.com',
     facebookName: 'Joshua Paclibar',
-    facebookUrl: '', // [ADD your Facebook profile URL to make the name a link]
-    phone: '0938 981 8121',
+    facebookUrl: 'https://www.facebook.com/joshua.paclibar.871770',
+    phone: '0939 981 8121',
     phoneNote: 'TNT',
   },
 };

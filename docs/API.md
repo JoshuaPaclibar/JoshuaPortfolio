@@ -17,7 +17,7 @@ All responses are JSON.
 | 413 | Request body larger than 10 KB |
 | 429 | Rate limit exceeded (contact endpoint) |
 | 500 | Unexpected server error |
-| 503 | MongoDB is not connected |
+| 503 | MongoDB is not connected (projects) / message could not be delivered (contact) |
 
 ---
 
@@ -66,7 +66,7 @@ Errors: `400` if `:id` is not a 24-character hex ObjectId, `404` if no project h
 
 ## POST /api/contact
 
-Validates a message and saves it to MongoDB (collection `contacts`).
+Validates a message, **emails it to the portfolio owner** (Gmail, via nodemailer), and also saves a copy to MongoDB (collection `contacts`) when the database is connected.
 
 Request body (`Content-Type: application/json`):
 
@@ -94,9 +94,9 @@ Validation error `400`:
 }
 ```
 
-Other errors: `429` after 10 requests per IP in 15 minutes, `503` if the database is not connected (the message is **not** reported as sent).
+Other errors: `429` after 10 requests per IP in 15 minutes, `503` if the message could not be delivered by **either** route (email not configured/failed **and** database not connected). It is never reported as sent unless the email was sent or the message was saved.
 
-Invalid input is checked first, so it returns `400` even when the database is down.
+Invalid input is checked first, so it returns `400` even when nothing else is configured.
 
 ### Example (PowerShell)
 

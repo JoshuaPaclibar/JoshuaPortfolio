@@ -5,7 +5,7 @@ const projects = [
   {
     title: 'Devify Development',
     description:
-      'A mobile app designed to help users remember assignments, deadlines, and tasks for educational purposes.',
+      'A mobile app designed to help the users remember assignments, deadlines, and tasks for educational purposes.',
     technologies: [], // [ADD technologies you used]
     image: '/images/devify.png',
     githubUrl: '', // [ADD repository URL]

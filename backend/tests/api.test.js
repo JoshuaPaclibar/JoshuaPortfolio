@@ -74,3 +74,8 @@ test('security headers from Helmet are present', async () => {
   const res = await fetch(`${base}/api/health`);
   assert.ok(res.headers.get('x-content-type-options'));
 });
+
+test('POST /api/contact is NOT reported as sent when neither email nor database is available', async () => {
+  const res = await post('/api/contact', good);
+  assert.equal(res.status, 503);
+});

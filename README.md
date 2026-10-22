@@ -91,6 +91,9 @@ cd ..
 | `MONGODB_URI` | MongoDB connection string | `mongodb://127.0.0.1:27017/portfolio_db` |
 | `FRONTEND_URL` | Exact frontend origin allowed by CORS (no trailing slash) | `http://localhost:5173` |
 | `NODE_ENV` | `development` or `production` | `development` |
+| `SMTP_USER` | Gmail address that sends the contact emails | `joshuapaclibar37@gmail.com` |
+| `SMTP_PASS` | Gmail **App Password** (16 characters, not your normal password) | *(empty, you fill it in)* |
+| `CONTACT_TO` | Inbox that receives the messages (defaults to `SMTP_USER`) | `joshuapaclibar37@gmail.com` |
 
 `frontend/.env`
 
@@ -101,6 +104,17 @@ cd ..
 **Proxy vs `VITE_API_URL`:** if `VITE_API_URL` is set, the browser calls that URL directly (so CORS and `FRONTEND_URL` must match). If it is empty or missing, the app calls `/api/...` on the Vite dev server (port 5173) and `vite.config.js` proxies it to `http://localhost:5000`. Restart `npm run dev` after changing `.env`.
 
 Never commit real `.env` files. Only `VITE_` variables reach the browser, so never put secrets in the frontend `.env`.
+
+## Email setup (contact form → your Gmail)
+
+The contact form emails every message to `CONTACT_TO`. Gmail needs an *App Password*:
+
+1. Turn on 2-Step Verification: <https://myaccount.google.com/security>
+2. Create an App Password: <https://myaccount.google.com/apppasswords> (name it "Portfolio").
+3. In `backend/.env` set `SMTP_USER=joshuapaclibar37@gmail.com` and `SMTP_PASS=<the 16 characters, no spaces>`.
+4. Restart the backend (`npm run dev`) and send a test message from the site. Reply-To is set to the visitor's email.
+
+Never commit `.env` or share the app password. If email is not configured, messages are only saved to MongoDB (when it is running); if neither works, the visitor sees an error, not a fake success.
 
 ## MongoDB setup
 
@@ -157,7 +171,7 @@ Check the API: open <http://localhost:5000/api/health>. `"database": "connected"
 | GET | `/api/health` | Health + database state |
 | GET | `/api/projects` | All projects |
 | GET | `/api/projects/:id` | One project |
-| POST | `/api/contact` | Validate and save a message |
+| POST | `/api/contact` | Validate, email to your Gmail, and save a copy |
 
 Details and examples: [docs/API.md](docs/API.md).
 
@@ -178,7 +192,7 @@ Details and examples: [docs/API.md](docs/API.md).
 | `[db] MongoDB connection failed` | Is MongoDB running? Is `MONGODB_URI` correct? For Atlas: IP allow-list, user/password, URL-encoded password. |
 | CORS error in browser console | `FRONTEND_URL` must exactly equal the browser origin (`http://localhost:5173`). Restart the backend. Or empty `VITE_API_URL` to use the proxy. |
 | "unexpected response" / `Unexpected token <` | The frontend got an HTML page: wrong `VITE_API_URL`, backend not running, or wrong port. |
-| Contact form says "Database is not available" | Same as the MongoDB failure above; the message was **not** saved. |
+| Contact form says "could not be delivered" | Neither email nor MongoDB worked. Check `SMTP_USER` / `SMTP_PASS` (App Password!) in `backend/.env` and the backend terminal for `[contact] Email failed: ...`. |
 | `429 Too many messages` | Rate limit (10 per 15 minutes per IP). Wait or restart the backend while testing. |
 | `npm` blocked in PowerShell | `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` |
 | Port already in use | Change `PORT` in `backend/.env` (and the proxy target in `vite.config.js` / `VITE_API_URL`). |

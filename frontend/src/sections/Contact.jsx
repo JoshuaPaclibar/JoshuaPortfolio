@@ -85,12 +85,12 @@ export default function Contact() {
   return (
     <section id="contact" className="section" aria-labelledby="contact-title">
       <div className="container">
-        <SectionTitle id="contact-title" title="Contacts" subtitle="Send me a message or reach me directly." />
+        <SectionTitle id="contact-title" title="Contact Me" />
 
         <div className="contact">
           <ul className="contact__list">
             <li>
-              <span className="contact__label">G-mail:</span>
+              <span className="contact__label">E-mail:</span>
               <a className="contact__value" href={`mailto:${email}`}>
                 <Mail size={22} aria-hidden="true" /> <span>{email}</span>
               </a>
@@ -120,19 +120,19 @@ export default function Contact() {
 
             <div className="field">
               <label htmlFor="contact-name">Name</label>
-              <input type="text" autoComplete="name" maxLength={LIMITS.nameMax} required {...fieldProps('name')} />
+              <input type="text" placeholder="Your Name" autoComplete="name" maxLength={LIMITS.nameMax} required {...fieldProps('name')} />
               {renderError('name')}
             </div>
 
             <div className="field">
               <label htmlFor="contact-email">Email</label>
-              <input type="email" autoComplete="email" maxLength={LIMITS.emailMax} required {...fieldProps('email')} />
+              <input type="email" placeholder="your.email@example.com" autoComplete="email" maxLength={LIMITS.emailMax} required {...fieldProps('email')} />
               {renderError('email')}
             </div>
 
             <div className="field">
               <label htmlFor="contact-message">Message</label>
-              <textarea rows="5" maxLength={LIMITS.messageMax} required {...fieldProps('message')} />
+              <textarea rows="5" placeholder="Your message here..." maxLength={LIMITS.messageMax} required {...fieldProps('message')} />
               <p className="field__hint">{form.message.length}/{LIMITS.messageMax}</p>
               {renderError('message')}
             </div>
@@ -144,7 +144,7 @@ export default function Contact() {
                 </>
               ) : (
                 <>
-                  <Send size={18} aria-hidden="true" /> Send message
+                  <Send size={18} aria-hidden="true" /> Send Message
                 </>
               )}
             </button>

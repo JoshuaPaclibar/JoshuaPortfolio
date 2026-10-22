@@ -3,9 +3,9 @@
   inset: 0 0 auto 0;
   z-index: 50;
   height: var(--nav-height);
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--color-border);
+  background: var(--color-nav);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .navbar__inner {
@@ -19,41 +19,41 @@
 }
 
 .navbar__brand {
-  font-weight: 800;
-  font-size: 1.25rem;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #ffffff;
   text-decoration: none;
-  letter-spacing: 0.04em;
-  text-shadow: var(--text-glow);
 }
 
 .navbar__nav ul {
   display: flex;
-  gap: var(--space-3);
+  gap: var(--space-5);
   list-style: none;
 }
 
 .navbar__nav a {
   display: block;
-  padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-sm);
-  font-weight: 500;
+  padding: var(--space-2) 0;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.95rem;
   text-decoration: none;
-  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
 }
 
 .navbar__nav a:hover,
 .navbar__nav a.is-active {
-  background: var(--color-surface);
-  color: var(--color-text-dark);
-  box-shadow: var(--glow);
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
 }
 
 .navbar__toggle {
   display: none;
   padding: var(--space-2);
   background: transparent;
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: var(--radius-sm);
   cursor: pointer;
 }
@@ -69,9 +69,9 @@
     left: 0;
     right: 0;
     display: none;
-    padding: var(--space-4) var(--space-5) var(--space-5);
-    background: #000;
-    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-3) var(--space-5) var(--space-4);
+    background: var(--color-nav);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
   }
 
   .navbar__nav.is-open {
@@ -80,9 +80,10 @@
 
   .navbar__nav ul {
     flex-direction: column;
+    gap: 0;
   }
 
   .navbar__nav a {
-    padding: var(--space-3) var(--space-4);
+    padding: var(--space-3) 0;
   }
 }

@@ -2,8 +2,6 @@ import Navbar from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
 import Hero from './sections/Hero.jsx';
 import About from './sections/About.jsx';
-import Skills from './sections/Skills.jsx';
-import Education from './sections/Education.jsx';
 import Projects from './sections/Projects.jsx';
 import Contact from './sections/Contact.jsx';
 
@@ -16,8 +14,6 @@ export default function App() {
       <main id="main">
         <Hero />
         <About />
-        <Skills />
-        <Education />
         <Projects />
         <Contact />
       </main>
